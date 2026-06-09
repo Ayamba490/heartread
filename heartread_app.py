@@ -131,27 +131,28 @@ def chat(system: str, user: str, max_tokens: int = 1024) -> str:
 # ── AI functions ───────────────────────────────────────────────────────────
 def run_analysis(answers: dict) -> dict:
     context = "\n".join([f"{k}: {v}" for k, v in answers.items()])
-    system = """You are a warm, emotionally intelligent relationship advisor.
-Analyze the signals described and respond ONLY with valid JSON in this exact format:
-{
-  "verdict": "Likely Interested OR Mixed Signals OR Probably Just Friendly OR Hard to Tell",
-  "confidence": <integer 0-100>,
-  "headline": "<one punchy empathetic sentence, max 12 words>",
-  "analysis": "<3 paragraphs separated by newlines, honest and warm, specific to their situation>",
-  "green_flags": ["<up to 3 positive signals>"],
-  "yellow_flags": ["<up to 3 ambiguous signals>"],
-  "red_flags": ["<up to 2 cautionary signals, or empty list>"],
-  "next_step": "<one specific actionable thing to do this week>",
-  "affirmation": "<one short genuine sentence of emotional support>"
-}
-Return ONLY the JSON object. No markdown. No explanation. No extra text."""
+    system = "You are a relationship advisor. Respond ONLY with valid JSON. No other text."
+    user = f"""Analyze this situation and respond with ONLY this JSON structure, nothing else:
+{{
+  "verdict": "Likely Interested",
+  "confidence": 70,
+  "headline": "Your headline here",
+  "analysis": "Paragraph 1.\n\nParagraph 2.\n\nParagraph 3.",
+  "green_flags": ["flag1", "flag2"],
+  "yellow_flags": ["flag1"],
+  "red_flags": [],
+  "next_step": "One action here",
+  "affirmation": "One sentence here"
+}}
 
-    raw = chat(system, f"My situation:\n{context}")
-    # Clean any markdown fences
+Situation: {context}
+
+Replace the values above with real analysis. Return ONLY the JSON object."""
+
+    raw = chat(system, user)
     raw = raw.replace("```json","").replace("```","").strip()
-    # Find the JSON object
     start = raw.find("{")
-    end   = raw.rfind("}") + 1
+    end = raw.rfind("}") + 1
     return json.loads(raw[start:end])
 
 
