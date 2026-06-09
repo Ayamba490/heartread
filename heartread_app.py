@@ -153,7 +153,9 @@ Replace the values above with real analysis. Return ONLY the JSON object."""
     raw = raw.replace("```json","").replace("```","").strip()
     start = raw.find("{")
     end = raw.rfind("}") + 1
-    return json.loads(raw[start:end])
+    cleaned = raw[start:end]
+    cleaned = cleaned.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ')
+    return json.loads(cleaned)
 
 
 def run_trend(log: list, person: str) -> str:
