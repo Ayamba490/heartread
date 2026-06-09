@@ -87,7 +87,7 @@ VERDICT_CONFIG = {
 
 MSG_TONES = ["Casual & light", "Warm & genuine", "Playful & flirty", "Bold & direct"]
 
-MODEL = "llama3-70b-8192"   # free on Groq, very capable
+MODEL = "llama-3.3-70b-versatile"  # free on Groq, very capable
 
 # ── Session state ──────────────────────────────────────────────────────────
 DEFAULTS = {
